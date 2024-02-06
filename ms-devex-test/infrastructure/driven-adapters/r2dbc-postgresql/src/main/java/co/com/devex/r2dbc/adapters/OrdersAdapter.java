@@ -21,6 +21,10 @@ public class OrdersAdapter implements IOrdersRepository {
 	public Mono<Orders> getOrder(Long orderId) {
 		return iOrdersEntityRepository.findById(orderId)
 				.map(mappers::toOrdersModel)
+				.switchIfEmpty(Mono.defer(() ->{
+					log.warn("La orden {} no existe",orderId);
+					return Mono.empty();
+				}))
 				.onErrorResume(err -> {
 					log.error("Error to find order with orderId {}. Info: {}", orderId, err.getMessage());
 					return Mono.error(err);

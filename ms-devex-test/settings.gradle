@@ -20,3 +20,5 @@ include ':r2dbc-postgresql'
 project(':r2dbc-postgresql').projectDir = file('./infrastructure/driven-adapters/r2dbc-postgresql')
 include ':async-notifications'
 project(':async-notifications').projectDir = file('./infrastructure/driven-adapters/async-notifications')
+include ':utils'
+project(':utils').projectDir = file('./infrastructure/driven-adapters/utils')

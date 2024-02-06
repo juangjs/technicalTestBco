@@ -7,9 +7,9 @@ import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 public class AsyncnotificationsUseCase {
-	private final IAsyncnotificationsGateway iAsyncnotificationsRepository;
+	private final IAsyncnotificationsGateway iAsyncnotificationsGateway;
 	
 	public Mono<Void> sendAsyncNotificationMail(Asyncnotifications asyncnotifications){
-		return iAsyncnotificationsRepository.sendAsyncNotificationMail(asyncnotifications);
+		return iAsyncnotificationsGateway.sendAsyncNotificationMail(asyncnotifications);
 	}
 }
