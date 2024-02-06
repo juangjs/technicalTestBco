@@ -4,6 +4,7 @@ import co.com.devex.model.orders.Orders;
 import reactor.core.publisher.Mono;
 
 public interface IOrdersRepository {
-	Mono<Orders> getOrder(String OrderId);
-	Mono<Void> updateOrder(Orders orders);
+	Mono<Orders> getOrder(Long orderId);
+	Mono<Orders> updateOrder(Orders orders);
+	Mono<Orders> createOrder(Orders orders);
 }
