@@ -5,6 +5,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import co.com.devex.model.orders.Orders;
+import co.com.devex.model.orders.ProductOrders;
 import co.com.devex.r2dbc.entities.OrdersEntity;
 import co.com.devex.r2dbc.entities.ProductOrdersEntity;
 import co.com.devex.r2dbc.entities.ResumeOrderEntity;
@@ -24,7 +25,7 @@ public interface IOrdersEntityRepository extends ReactiveCrudRepository<OrdersEn
 	
 	@Query("insert into tbl_pedidos_productos (id,fk_pedido,fk_producto,cantidad,total)"
 			+ " values(nextval('tbl_pedidos_productos_id_seq'),:#{#id.getOrderId()},:#{#id.getProductId()},:#{#id.getProductQuantity()},:#{#id.getTotalCost()})")
-	Mono<ProductOrdersEntity> saveProductByOrder(@Param("product") Orders product);
+	Mono<ProductOrdersEntity> saveProductByOrder(@Param("product") ProductOrders product);
 	
 	@Query("select C.nombre,C.precio,A.cantidad,A.total "
 			+ "from tbl_pedidos_productos A "

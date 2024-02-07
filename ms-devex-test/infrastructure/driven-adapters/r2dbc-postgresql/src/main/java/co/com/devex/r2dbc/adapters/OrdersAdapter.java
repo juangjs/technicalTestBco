@@ -3,6 +3,7 @@ package co.com.devex.r2dbc.adapters;
 import org.springframework.stereotype.Component;
 
 import co.com.devex.model.orders.Orders;
+import co.com.devex.model.orders.ProductOrders;
 import co.com.devex.model.orders.gateways.IOrdersRepository;
 import co.com.devex.r2dbc.entities.repositories.IOrdersEntityRepository;
 import co.com.devex.r2dbc.helper.Mappers;
@@ -38,9 +39,9 @@ public class OrdersAdapter implements IOrdersRepository {
 	}
 
 	@Override
-	public Mono<Orders> createProductByOrden(Orders orders) {
-		// TODO Auto-generated method stub
-		return null;
+	public Mono<ProductOrders> createProductByOrden(ProductOrders productOrders) {
+		return iOrdersEntityRepository.saveProductByOrder(productOrders)
+				.map(mappers::toProductOrdersModel);
 	}
 
 	@Override
