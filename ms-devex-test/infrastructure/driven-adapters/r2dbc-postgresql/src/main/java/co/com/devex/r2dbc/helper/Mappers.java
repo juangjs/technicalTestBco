@@ -1,14 +1,17 @@
 package co.com.devex.r2dbc.helper;
 
+
 import org.springframework.stereotype.Component;
 
 import co.com.devex.model.orders.Orders;
 import co.com.devex.model.orders.ProductOrders;
+import co.com.devex.model.orders.ResumeOrder;
 import co.com.devex.model.products.Products;
 import co.com.devex.model.users.Users;
 import co.com.devex.r2dbc.entities.OrdersEntity;
 import co.com.devex.r2dbc.entities.ProductOrdersEntity;
 import co.com.devex.r2dbc.entities.ProductsEntity;
+import co.com.devex.r2dbc.entities.ResumeOrderEntity;
 import co.com.devex.r2dbc.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
 
@@ -109,6 +112,24 @@ public class Mappers {
 				.userName(users.getUserName())
 				.userPhone(users.getUserPhone())
 				.userMail(users.getUserMail())
+				.build();
+	}
+	
+	public ResumeOrder toResumeOrderModel(ResumeOrderEntity resumeOrderEntity) {
+		return ResumeOrder.builder()
+				.productName(resumeOrderEntity.getProductName())
+				.price(resumeOrderEntity.getPrice())
+				.quantity(resumeOrderEntity.getQuantity())
+				.total(resumeOrderEntity.getTotal())
+				.build();
+	}
+	
+	public ResumeOrderEntity toResumeOrderEntity(ResumeOrder resumeOrder) {
+		return ResumeOrderEntity.builder()
+				.productName(resumeOrder.getProductName())
+				.price(resumeOrder.getPrice())
+				.quantity(resumeOrder.getQuantity())
+				.total(resumeOrder.getTotal())
 				.build();
 	}
 }

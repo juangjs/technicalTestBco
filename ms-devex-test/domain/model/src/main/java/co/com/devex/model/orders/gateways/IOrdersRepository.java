@@ -6,5 +6,6 @@ import reactor.core.publisher.Mono;
 public interface IOrdersRepository {
 	Mono<Orders> getOrder(Long orderId);
 	Mono<Orders> updateOrder(Orders orders);
-	Mono<Orders> createOrder(Orders orders);
+	Mono<Orders> saveOrder(Orders orders);
+	Mono<Orders> createProductByOrden(Orders orders);
 }

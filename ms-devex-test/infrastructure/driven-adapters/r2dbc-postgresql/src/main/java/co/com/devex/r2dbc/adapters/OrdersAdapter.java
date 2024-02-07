@@ -26,18 +26,26 @@ public class OrdersAdapter implements IOrdersRepository {
 					return Mono.empty();
 				}))
 				.onErrorResume(err -> {
-					log.error("Error to find order with orderId {}. Info: {}", orderId, err.getMessage());
+					log.error("Error al consultar orden con id {}. Info: {}", orderId, err.getMessage());
 					return Mono.error(err);
 				});
 	}
 
 	@Override
-	public Mono<Orders> updateOrder(Orders orders) {
+	public Mono<Orders> saveOrder(Orders orders) {
+		return iOrdersEntityRepository.saveOrder(orders)
+				.map(mappers::toOrdersModel);
+	}
+
+	@Override
+	public Mono<Orders> createProductByOrden(Orders orders) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Mono<Orders> createOrder(Orders orders) {
-		return null;
+	public Mono<Orders> updateOrder(Orders orders) {
+		return iOrdersEntityRepository.save(mappers.toOrdersEntity(orders))
+				.map(mappers::toOrdersModel);
 	}
 }
