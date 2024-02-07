@@ -14,7 +14,8 @@ import co.com.devex.r2dbc.entities.ProductsEntity;
 import co.com.devex.r2dbc.entities.ResumeOrderEntity;
 import co.com.devex.r2dbc.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.log4j.Log4j2;
+@Log4j2
 @Component
 @RequiredArgsConstructor
 public class Mappers {
@@ -37,6 +38,7 @@ public class Mappers {
 	}
 	
 	public OrdersEntity toOrdersEntity (Orders orders) {
+		log.info("OrdersEntity {}", orders.toString());
 		return OrdersEntity.builder()
 				.id(orders.getId())
 				.createDate(orders.getCreateDate())

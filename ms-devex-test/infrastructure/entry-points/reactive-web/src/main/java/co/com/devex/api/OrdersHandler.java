@@ -6,6 +6,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import co.com.devex.api.mappers.OrderMapper;
 import co.com.devex.api.model.request.createOrder.RequestDataReq;
+import co.com.devex.api.model.request.updateOrder.OrderUpdateReq;
 import co.com.devex.api.validations.ValidatorOrdersRequest;
 import co.com.devex.usecase.orders.OrdersUseCase;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +42,11 @@ public class OrdersHandler {
 	}
 	
 	public Mono<ServerResponse> updateOrder(ServerRequest serverRequest) {
-		return ordersUseCase.selectOrder(serverRequest.queryParam("orderId").get())
-				.flatMap(order -> ServerResponse.ok().bodyValue(order));
+		return serverRequest.bodyToMono(OrderUpdateReq.class)
+				.flatMap(orderMapper::toOrderUpdateApiModel)
+				.flatMap(ordersUseCase::updateOrder)
+				.flatMap(order -> ServerResponse.ok().bodyValue(order))
+				.onErrorResume(err -> ServerResponse.badRequest().bodyValue(err.getMessage()));
 	}
 
 }

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Component;
 
 import co.com.devex.api.model.request.createOrder.RequestDataReq;
+import co.com.devex.api.model.request.updateOrder.OrderUpdateReq;
+import co.com.devex.model.orders.api.createorders.OrderUpdateApi;
 import co.com.devex.model.orders.api.createorders.OrdersApi;
 import co.com.devex.model.orders.api.createorders.ProductOrderApi;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,13 @@ public class OrderMapper {
 				.customerAddress(requestDataReq.getData().getCustomer().getCustomerAddress())
 				.userId(requestDataReq.getData().getUser().getDocumentUser())
 				.products(product)
+				.build());
+	}
+	
+	public Mono<OrderUpdateApi> toOrderUpdateApiModel(OrderUpdateReq orderUpdateReq){
+		return Mono.just(OrderUpdateApi.builder()
+				.orderId(orderUpdateReq.getOrderId())
+				.state(orderUpdateReq.getState())
 				.build());
 	}
 }

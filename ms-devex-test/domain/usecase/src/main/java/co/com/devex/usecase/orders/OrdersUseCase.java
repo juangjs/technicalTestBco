@@ -1,6 +1,7 @@
 package co.com.devex.usecase.orders;
 
 import co.com.devex.model.orders.Orders;
+import co.com.devex.model.orders.api.createorders.OrderUpdateApi;
 import co.com.devex.model.orders.api.createorders.OrdersApi;
 import co.com.devex.model.orders.gateways.IOrdersRepository;
 import co.com.devex.usecase.orders.products.ProductsUseCase;
@@ -20,8 +21,12 @@ public class OrdersUseCase {
 				.flatMap(iOrdersRepository::saveOrder);
 	}
 	
-	public Mono<Orders> updateOrder() {
-		return iOrdersRepository.saveOrder(null);
+	public Mono<Orders> updateOrder(OrderUpdateApi orderUpdateApi) {
+		return iOrdersRepository.getOrder(Long.valueOf(orderUpdateApi.getOrderId()))
+				.flatMap(order -> {
+					order.setState(orderUpdateApi.getState());
+					return Mono.just(order);
+				}).flatMap(iOrdersRepository::updateOrder);
 	}
 	
 	public Mono<Orders> selectOrder(String orderId) {
@@ -30,15 +35,5 @@ public class OrdersUseCase {
 	
 	public Mono<Orders> createProductByOrder(OrdersApi apiOrders) {
 		return null;
-	}
-
-	private Mono<OrdersApi> validateProduct(OrdersApi ordersApi) {
-		ordersApi.getProducts().forEach(p -> {
-			productsUseCase.getProduct(p.getProductName()).switchIfEmpty(Mono.defer(() -> {
-				throw new IllegalArgumentException(
-						"El producto " + p.getProductName() + "no existe. No se pudo genera el pedido");
-			}));
-		});
-		return Mono.just(ordersApi);
 	}
 }
