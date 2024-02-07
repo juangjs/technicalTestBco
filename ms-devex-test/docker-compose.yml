@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  java_app:
+    container_name: devex_app
+    image: app-devex:1.1.0
+    build: .
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_URL=jdbc:postgresql://java_db:5432/devexdb 
+      - DATABASE_USERNAME=admin
+      - DATABASE_PASSWORD=admin
+    depends_on:
+      - java_db
+
+  java_db:
+    container_name: devex_db
+    image: postgres:16.1
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: devexdb
