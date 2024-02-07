@@ -10,6 +10,7 @@ import reactor.core.publisher.Mono;
 
 public interface IProductEntityRepository extends ReactiveCrudRepository<ProductsEntity, Long>{
 	
+	@Query("select * from tbl_producto where nombre = :name")
 	Mono<ProductsEntity> findProductByName(@Param("name") String name);
 	
 	@Query("select * from public.tbl_producto")

@@ -76,6 +76,7 @@ public class Mappers {
 	}
 	
 	public Products toProductsModel (ProductsEntity productsEntity){
+		log.info("productsEntity.getName() {}",productsEntity.getName());
 		return Products.builder()
 				.id(productsEntity.getId())
 				.name(productsEntity.getName())

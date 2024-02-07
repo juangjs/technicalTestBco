@@ -19,6 +19,7 @@ public class ProductsAdapter implements IProductsRepository {
 	
 	@Override
 	public Mono<Products> getProdut(String productName) {
+		log.info(productName);
 		return iProductEntityRepository.findProductByName(productName)
 				.map(mappers::toProductsModel)
 				.switchIfEmpty(Mono.defer(() ->{

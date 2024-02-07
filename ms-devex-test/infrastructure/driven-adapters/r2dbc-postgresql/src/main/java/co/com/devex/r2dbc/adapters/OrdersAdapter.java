@@ -40,6 +40,7 @@ public class OrdersAdapter implements IOrdersRepository {
 
 	@Override
 	public Mono<ProductOrders> createProductByOrden(ProductOrders productOrders) {
+		log.info("ProductOrders {}", productOrders.toString());
 		return iOrdersEntityRepository.saveProductByOrder(productOrders)
 				.map(mappers::toProductOrdersModel);
 	}
