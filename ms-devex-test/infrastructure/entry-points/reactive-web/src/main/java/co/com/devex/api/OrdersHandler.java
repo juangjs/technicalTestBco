@@ -35,7 +35,10 @@ public class OrdersHandler {
 
 	public Mono<ServerResponse> createOrder(ServerRequest serverRequest) {
 		return serverRequest.bodyToMono(RequestDataReq.class)
-				.flatMap(orderMapper::toApiRequestModel)
+				.flatMap(p-> {
+					log.info("RequestDataReq "+ p.toString());
+					return orderMapper.toApiRequestModel(p);
+				})
 				.flatMap(ordersUseCase::createOrder)
 				.flatMap(order -> ServerResponse.ok().bodyValue(order))
 				.onErrorResume(err -> ServerResponse.badRequest().bodyValue(err.getMessage()));

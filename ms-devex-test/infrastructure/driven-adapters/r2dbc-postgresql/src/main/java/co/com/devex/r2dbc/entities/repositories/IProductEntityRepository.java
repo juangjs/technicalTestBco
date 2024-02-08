@@ -13,6 +13,6 @@ public interface IProductEntityRepository extends ReactiveCrudRepository<Product
 	@Query("select * from tbl_producto where nombre = :name")
 	Mono<ProductsEntity> findProductByName(@Param("name") String name);
 	
-	@Query("select * from public.tbl_producto")
-	Flux<ProductsEntity> findAllProducts();
+	@Query("select * from public.tbl_producto A where A.nombre in (:productName)")
+	Flux<ProductsEntity> findAllProductsByName(Flux<String> productName);
 }

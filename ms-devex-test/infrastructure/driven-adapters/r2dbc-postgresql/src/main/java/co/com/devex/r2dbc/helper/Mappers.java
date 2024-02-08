@@ -1,6 +1,9 @@
 package co.com.devex.r2dbc.helper;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import co.com.devex.model.orders.Orders;
@@ -15,6 +18,7 @@ import co.com.devex.r2dbc.entities.ResumeOrderEntity;
 import co.com.devex.r2dbc.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import reactor.core.publisher.Flux;
 @Log4j2
 @Component
 @RequiredArgsConstructor
@@ -38,7 +42,6 @@ public class Mappers {
 	}
 	
 	public OrdersEntity toOrdersEntity (Orders orders) {
-		log.info("OrdersEntity {}", orders.toString());
 		return OrdersEntity.builder()
 				.id(orders.getId())
 				.createDate(orders.getCreateDate())
@@ -75,8 +78,21 @@ public class Mappers {
 				.build();
 	}
 	
+	public List<ProductOrdersEntity> toProductOrdersListEntity(List<ProductOrders> productOrders) {
+		ArrayList<ProductOrdersEntity> entityList = new ArrayList<>();
+		productOrders.forEach(p -> {
+			entityList.add(ProductOrdersEntity.builder()
+					//.id(p.getId())
+					.orderId(p.getOrderId())
+					.productId(p.getProductId())
+					.productQuantity(p.getProductQuantity())
+					.totalCost(p.getTotalCost())
+					.build());
+		});
+		return entityList;
+	}
+	
 	public Products toProductsModel (ProductsEntity productsEntity){
-		log.info("productsEntity.getName() {}",productsEntity.getName());
 		return Products.builder()
 				.id(productsEntity.getId())
 				.name(productsEntity.getName())
@@ -85,6 +101,17 @@ public class Mappers {
 				.reference(productsEntity.getReference())
 				.stockquantity(productsEntity.getStockquantity())
 				.build();
+	}
+	
+	public List<Products> toProductsListModel (List<ProductsEntity> productsEntityList){
+		Products products;
+		List<Products> producList = new ArrayList<>();
+		
+		for(ProductsEntity productsEntity : productsEntityList) {
+			products = toProductsModel(productsEntity);
+			producList.add(products);
+		}
+		return producList;
 	}
 	
 	public ProductsEntity toProductsEntity (Products products){

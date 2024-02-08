@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class ValidatorOrdersRequest {
-	private Pattern order = Pattern.compile("\\d");
+	private final Pattern order = Pattern.compile("\\d");
 
 	public void validateGetOrderRequest(ServerRequest serverRequest) {
 		var orderId = serverRequest.queryParam("orderId").get();

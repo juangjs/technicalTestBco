@@ -3,7 +3,6 @@ package co.com.devex.r2dbc.adapters;
 import org.springframework.stereotype.Component;
 
 import co.com.devex.model.orders.Orders;
-import co.com.devex.model.orders.ProductOrders;
 import co.com.devex.model.orders.gateways.IOrdersRepository;
 import co.com.devex.r2dbc.entities.repositories.IOrdersEntityRepository;
 import co.com.devex.r2dbc.helper.Mappers;
@@ -17,6 +16,7 @@ import reactor.core.publisher.Mono;
 public class OrdersAdapter implements IOrdersRepository {
 	private final Mappers mappers;
 	private final IOrdersEntityRepository iOrdersEntityRepository;
+
 
 	@Override
 	public Mono<Orders> getOrder(Long orderId) {
@@ -38,12 +38,6 @@ public class OrdersAdapter implements IOrdersRepository {
 				.map(mappers::toOrdersModel);
 	}
 
-	@Override
-	public Mono<ProductOrders> createProductByOrden(ProductOrders productOrders) {
-		log.info("ProductOrders {}", productOrders.toString());
-		return iOrdersEntityRepository.saveProductByOrder(productOrders)
-				.map(mappers::toProductOrdersModel);
-	}
 
 	@Override
 	public Mono<Orders> updateOrder(Orders orders) {

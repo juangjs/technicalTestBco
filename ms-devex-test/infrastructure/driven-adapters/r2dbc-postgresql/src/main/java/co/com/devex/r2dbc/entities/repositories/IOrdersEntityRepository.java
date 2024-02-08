@@ -23,10 +23,6 @@ public interface IOrdersEntityRepository extends ReactiveCrudRepository<OrdersEn
 	Mono<OrdersEntity> saveOrder(@Param("order") Orders order);
 	
 	
-	@Query("insert into tbl_pedidos_productos (id,fk_pedido,fk_producto,cantidad,total)"
-			+ " values(nextval('tbl_pedidos_productos_id_seq'),:#{#id.getOrderId()},:#{#id.getProductId()},:#{#id.getProductQuantity()},:#{#id.getTotalCost()})")
-	Mono<ProductOrdersEntity> saveProductByOrder(@Param("product") ProductOrders product);
-	
 	@Query("select C.nombre,C.precio,A.cantidad,A.total "
 			+ "from tbl_pedidos_productos A "
 			+ "inner join tbl_producto C "
