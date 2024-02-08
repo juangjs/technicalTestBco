@@ -37,15 +37,8 @@ public class ProductsOrderAdapter implements IProductsOrderRepository {
 
 	@Override
 	public Flux<ProductOrders> saveAllProductsByOrder(List<ProductOrders> productOrders) {
-		/*return iProductOrdersEntityRepository
-				.saveAllProductByOrders(Flux.fromIterable(mappers.toProductOrdersListEntity(productOrders)))
-				.map(mappers::toProductOrdersModel);*/
-		log.info("productOrders {}",productOrders);
-		var list = mappers.toProductOrdersListEntity(productOrders);
-		log.info("list {}",list);
-		
 		return iProductOrdersEntityRepository
-				.saveAll(Flux.fromIterable(list))
+				.saveAll(Flux.fromIterable(mappers.toProductOrdersListEntity(productOrders)))
 				.map(mappers::toProductOrdersModel);
 	}
 }

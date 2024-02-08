@@ -2,7 +2,6 @@ package co.com.devex.r2dbc.adapters;
 
 import org.springframework.stereotype.Component;
 
-import co.com.devex.model.orders.api.createorders.ProductOrderApi;
 import co.com.devex.model.products.Products;
 import co.com.devex.model.products.gateways.IProductsRepository;
 import co.com.devex.r2dbc.entities.repositories.IProductEntityRepository;

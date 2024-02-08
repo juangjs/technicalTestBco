@@ -5,9 +5,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import co.com.devex.model.orders.Orders;
-import co.com.devex.model.orders.ProductOrders;
 import co.com.devex.r2dbc.entities.OrdersEntity;
-import co.com.devex.r2dbc.entities.ProductOrdersEntity;
 import co.com.devex.r2dbc.entities.ResumeOrderEntity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
