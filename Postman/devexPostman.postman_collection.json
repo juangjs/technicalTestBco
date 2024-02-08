@@ -1,0 +1,100 @@
+{
+	"info": {
+		"_postman_id": "9b799855-d0d0-47b5-abbe-364f2342ddec",
+		"name": "devexPostman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10968542"
+	},
+	"item": [
+		{
+			"name": "getOrderByID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/devex/orders/getOrder?orderId=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"devex",
+						"orders",
+						"getOrder"
+					],
+					"query": [
+						{
+							"key": "orderId",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateOrder",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": {\n        \"customer\": {\n            \"customerName\": \"test profin\",\n            \"customerDocument\": \"888\",\n            \"customerDocumentType\": \"CC\",\n            \"customerPhone\": \"33369888\",\n            \"customerMail\": \"4444@gmail.com\",\n            \"customerAddress\": \"calle 20\"\n        },\n        \"products\": [\n            {\n                \"productName\": \"Zapatos Old Style\",\n                \"quantity\": \"2\"\n            },\n            {\n                \"productName\": \"Camiseta Polo\",\n                \"quantity\": \"2\"\n            }\n        ],\n        \"user\": {\n            \"documentUser\": \"123\"\n        },\n        \"orderDetail\": \"Compra productos vestuario casual\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/devex/orders/createOrder",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"devex",
+						"orders",
+						"createOrder"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateOrder",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"orderId\": \"140\",\n    \"state\": \"completado\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/devex/orders/updateOrder",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"devex",
+						"orders",
+						"updateOrder"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
