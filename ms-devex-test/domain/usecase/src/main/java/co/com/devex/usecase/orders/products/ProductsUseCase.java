@@ -1,6 +1,5 @@
 package co.com.devex.usecase.orders.products;
 
-import co.com.devex.model.orders.api.createorders.ProductOrderApi;
 import co.com.devex.model.products.Products;
 import co.com.devex.model.products.gateways.IProductsRepository;
 import lombok.RequiredArgsConstructor;
