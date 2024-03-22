@@ -3,7 +3,7 @@ version: '3.9'
 services:
   java_app:
     container_name: devex_app
-    image: app-devex:1.1.0
+    image: devex_app_1:1.1.0
     build: .
     ports:
       - 8080:8080
