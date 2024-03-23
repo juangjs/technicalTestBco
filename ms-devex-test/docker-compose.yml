@@ -3,7 +3,7 @@ version: '3.9'
 services:
   java_app:
     container_name: devex_app
-    image: devex_app_1:1.1.0
+    image: devex_app_5:1.1.0
     build: .
     ports:
       - 8080:8080
@@ -23,3 +23,5 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: devexdb
+    volumes:
+      - ../sql/scripts.sql:/docker-entrypoint-initdb.d/scripts.sql

@@ -19,7 +19,7 @@ public class PostgreSQLConnectionPool {
 	ConnectionPool getConnectionConfig() {
 		PostgresqlConnectionProperties pgProperties = new PostgresqlConnectionProperties();
 		pgProperties.setDatabase("devexdb");
-		pgProperties.setHost("localhost");
+		pgProperties.setHost("java_db");
 		pgProperties.setPort(5432);
 		pgProperties.setUsername("admin");
 		pgProperties.setPassword("admin");
