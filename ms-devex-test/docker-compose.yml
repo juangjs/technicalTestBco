@@ -7,6 +7,12 @@ services:
     build: .
     ports:
       - 8080:8080
+    restart: on-failure:3
+    pids_limit: 100
+    cpus: 1
+    mem_limit: 2G
+    mem_reservation: 512M
+    user: appuser    
     environment:
       - DATABASE_URL=jdbc:postgresql://java_db:5432/devexdb 
       - DATABASE_USERNAME=admin
@@ -17,6 +23,11 @@ services:
   java_db:
     container_name: devex_db
     image: postgres:16.1
+    restart: on-failure:3
+    pids_limit: 100
+    cpus: 1
+    mem_limit: 2G
+    mem_reservation: 512M
     ports:
       - 5432:5432
     environment:
