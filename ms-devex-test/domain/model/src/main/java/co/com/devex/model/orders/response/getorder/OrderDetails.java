@@ -1,4 +1,4 @@
-package co.com.devex.model.orders.response;
+package co.com.devex.model.orders.response.getorder;
 
 import lombok.Builder;
 import lombok.Data;

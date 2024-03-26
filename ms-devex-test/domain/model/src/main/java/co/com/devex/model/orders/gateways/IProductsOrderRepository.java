@@ -9,4 +9,5 @@ import reactor.core.publisher.Mono;
 public interface IProductsOrderRepository {
 	Mono <ProductOrders> createProductOrders(ProductOrders roductOrders);
 	Flux<ProductOrders> saveAllProductsByOrder (List<ProductOrders> productOrders);
+	Flux<ProductOrders> findProductsByOrderId(Long orderId);
 }

@@ -3,60 +3,79 @@ package co.com.devex.usecase.orders;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import co.com.devex.model.orders.Orders;
 import co.com.devex.model.orders.ProductOrders;
 import co.com.devex.model.orders.api.createorders.OrderUpdateApi;
 import co.com.devex.model.orders.api.createorders.OrdersApi;
 import co.com.devex.model.orders.gateways.IOrdersRepository;
-import co.com.devex.model.orders.response.OderData;
-import co.com.devex.model.orders.response.Order;
-import co.com.devex.model.orders.response.OrderDetails;
-import co.com.devex.model.orders.response.ProductOrderDetail;
+import co.com.devex.model.orders.gateways.IProductsOrderRepository;
+import co.com.devex.model.orders.response.createorder.CreateOrder;
+import co.com.devex.model.orders.response.createorder.CreateOrderData;
+import co.com.devex.model.orders.response.getorder.OderData;
+import co.com.devex.model.orders.response.getorder.Order;
+import co.com.devex.model.orders.response.getorder.OrderDetails;
+import co.com.devex.model.orders.response.getorder.ProductOrderDetail;
+import co.com.devex.model.orders.response.updateorder.UpdateOrder;
+import co.com.devex.model.orders.response.updateorder.UpdateOrderData;
 import co.com.devex.model.products.Products;
 import co.com.devex.usecase.orders.products.ProductsUseCase;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 public class OrdersUseCase {
 	private final IOrdersRepository iOrdersRepository;
+	private final IProductsOrderRepository iProductsOrderRepository;
 	private final MappersUseCase mappersUseCase;
 	private final ProductsUseCase productsUseCase;
 	private final static DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	
-	public Mono<Order> createOrder(OrdersApi ordersApi) {
+	public Mono<CreateOrder> createOrder(OrdersApi ordersApi) {
 		return mappersUseCase.toCreateOrders(ordersApi).flatMap(iOrdersRepository::saveOrder).flatMap(order -> {
-			return getAllProductInfoByOrder(ordersApi).flatMap(products -> {
+			return productsUseCase.getAllProductByName(ordersApi).flatMap(products -> {
 				return formatProductsByOrder(ordersApi, order, products)
-						.map(productsByList -> buildProductOrderDetail(products, productsByList))
-						.flatMap(productOrderDetail -> buildOrderResponse(order, productOrderDetail));
+						.flatMap(p -> iProductsOrderRepository.saveAllProductsByOrder(p).collectList())
+						.flatMap(t -> buildCreateOrderResponse(order));
 			});
 		});
-
 	}
-	
-	private Mono<Order> buildOrderResponse(Orders orders, List<ProductOrderDetail> productsByOrderList){
+
+	public Mono<UpdateOrder> updateOrder(OrderUpdateApi orderUpdateApi) {
+		return iOrdersRepository.getOrder(Long.valueOf(orderUpdateApi.getOrderId())).flatMap(order -> {
+			order.setStatus(orderUpdateApi.getStatus());
+			return Mono.just(order);
+		}).flatMap(iOrdersRepository::updateOrder).flatMap(this::buildUpdateOrderResponse);
+	}
+
+	public Mono<Order> getOrderById(String orderId) {
+		var id = Long.valueOf(orderId);
+		return iOrdersRepository.getOrder(id).flatMap(orders -> {
+			return iProductsOrderRepository.findProductsByOrderId(id).collectList().flatMap(productsByOrder -> {
+				ArrayList<Long> productsId = new ArrayList<>();
+				productsByOrder.stream().forEach(p -> productsId.add(p.getProductId()));
+				return productsUseCase.getAllProductById(Flux.fromIterable(productsId)).collectList()
+						.map(productList -> buildProductOrderDetail(productList, productsByOrder))
+						.flatMap(productOrderDetail -> buildOrderResponse(orders, productOrderDetail));
+			});
+		});
+	}
+
+	private Mono<Order> buildOrderResponse(Orders orders, List<ProductOrderDetail> productsByOrderList) {
 		ArrayList<Integer> totalByProduct = new ArrayList<>();
 		productsByOrderList.forEach(p -> totalByProduct.add(Integer.valueOf(p.getTotal())));
 		return Mono.just(Order.builder()
-				.data(OderData.builder()
-						.description(OrderDetails.builder()
-								.orderID(Long.toString(orders.getId()) )
-								.customer(orders.getCustomerName())
-								.document(orders.getCustomerDocument())
-								.creationDate(orders.getCreateDate().format(CUSTOM_FORMATTER))
-								.detail(orders.getDetail())
-								.totalCost(Integer.toString(totalByProduct.stream().mapToInt(Integer::intValue).sum()))
-								.status(orders.getState())
-								.build())
-						.products(productsByOrderList)
-						.build())
+				.data(OderData.builder().description(OrderDetails.builder().orderID(Long.toString(orders.getId()))
+						.customer(orders.getCustomerName()).document(orders.getCustomerDocument())
+						.creationDate(orders.getCreateDate().format(CUSTOM_FORMATTER)).detail(orders.getDetail())
+						.totalCost(Integer.toString(totalByProduct.stream().mapToInt(Integer::intValue).sum()))
+						.status(orders.getStatus()).build()).products(productsByOrderList).build())
 				.build());
 	}
-	
+
 	private List<ProductOrderDetail> buildProductOrderDetail(List<Products> products,
 			List<ProductOrders> productOrders) {
 		ArrayList<ProductOrderDetail> productOrderDetailList = new ArrayList<>();
@@ -69,18 +88,6 @@ public class OrdersUseCase {
 						products.stream().filter(a -> a.getId().equals(p.getProductId())).findFirst().get().getPrice()))
 				.total(Integer.toString(p.getTotalCost())).build()));
 		return productOrderDetailList;
-	}
-	
-	public Mono<Orders> updateOrder(OrderUpdateApi orderUpdateApi) {
-		return iOrdersRepository.getOrder(Long.valueOf(orderUpdateApi.getOrderId()))
-				.flatMap(order -> {
-					order.setState(orderUpdateApi.getState());
-					return Mono.just(order);
-				}).flatMap(iOrdersRepository::updateOrder);
-	}
-	
-	public Mono<Orders> selectOrder(String orderId) {
-		return iOrdersRepository.getOrder(Long.valueOf(orderId));
 	}
 	
 	private Mono<List<ProductOrders>> formatProductsByOrder(OrdersApi ordersApi, Orders orders, List<Products> productsList) {
@@ -98,11 +105,15 @@ public class OrdersUseCase {
 		});
         return Mono.just(formatedProductsList);
 	}
-	
-	private Mono<List<Products>> getAllProductInfoByOrder(OrdersApi ordersApi) {
-		ArrayList<String> productNameList = new ArrayList<>();
-		ordersApi.getProducts().forEach(p -> productNameList.add(p.getProductName()));
-		return productsUseCase.getAllProductByName(Flux.fromIterable(productNameList))
-				.collectList();
+
+	private Mono<CreateOrder> buildCreateOrderResponse(Orders orders) {
+		return Mono.just(CreateOrder.builder()
+				.data(CreateOrderData.builder().orderId(orders.getId()).orderStatus(orders.getStatus()).build())
+				.build());
+	}
+
+	private Mono<UpdateOrder> buildUpdateOrderResponse(Orders orders) {
+		return Mono.just(UpdateOrder.builder()
+				.data(UpdateOrderData.builder().orderId(orders.getId()).newStatus(orders.getStatus()).build()).build());
 	}
 }

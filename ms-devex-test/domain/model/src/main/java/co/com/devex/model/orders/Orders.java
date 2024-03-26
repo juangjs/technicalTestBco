@@ -10,7 +10,7 @@ public class Orders {
 	private Long id;
 	private LocalDateTime createDate;
 	private LocalDateTime updateDate;
-	private String state;
+	private String status;
 	private String detail;
 	private String customerName;
 	private String customerDocument;

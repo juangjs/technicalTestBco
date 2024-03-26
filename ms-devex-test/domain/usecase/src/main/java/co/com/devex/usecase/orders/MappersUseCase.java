@@ -14,7 +14,7 @@ public class MappersUseCase {
 		return Mono.just(Orders.builder()
 				.createDate(LocalDateTime.now())
 				.updateDate(LocalDateTime.now())
-				.state("PENDING")
+				.status("PENDING")
 				.detail(apiOrders.getDetail())
 				.customerName(apiOrders.getCustomerName())
 				.customerDocument(apiOrders.getCustomerDocument())
