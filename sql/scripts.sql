@@ -52,13 +52,13 @@ values ('Camiseta Polo','Camiseta casual de cuello',45000,'caPol',4000);
 insert into tbl_usuario (identificacion,tipo_identificacion,nombre,celular,correo)
 values ('123','CC','pepito perez','3128344636','juang.js80@gmail.com');
 
-insert into tbl_pedido (fecha_creacion,fecha_modificacion,estado,detalle,nombre_cliente,documento_cliente,tipo_documento_cliente,
-					   telefono_cliente,correo_cliente,direccion_cliente,fk_usuario_comercial)
-values ('2024-02-04 21:50:02'::timestamp,'2024-02-04 21:50:02'::timestamp,'pendiente','Pedido creado',
-		'Juan Guillermo','71223490','CC','3128344636','juang.js80@gmail.com','calle 100 Sur 33','123');
+--insert into tbl_pedido (fecha_creacion,fecha_modificacion,estado,detalle,nombre_cliente,documento_cliente,tipo_documento_cliente,
+--					   telefono_cliente,correo_cliente,direccion_cliente,fk_usuario_comercial)
+--values ('2024-02-04 21:50:02'::timestamp,'2024-02-04 21:50:02'::timestamp,'PENDING','Pedido creado',
+--		'Juan Guillermo','71223490','CC','3128344636','juang.js80@gmail.com','calle 100 Sur 33','123');
 
-insert into tbl_pedidos_productos (fk_pedido,fk_producto,cantidad,total)
-values('1','1',1,1000);
+--insert into tbl_pedidos_productos (fk_pedido,fk_producto,cantidad,total)
+--values('1','1',1,1000);
 
-insert into tbl_pedidos_productos (fk_pedido,fk_producto,cantidad,total)
-values('1','2',2,8000);
+--insert into tbl_pedidos_productos (fk_pedido,fk_producto,cantidad,total)
+--values('1','2',2,8000);

@@ -16,7 +16,7 @@ public interface IOrdersEntityRepository extends ReactiveCrudRepository<OrdersEn
 
 	@Query("insert into tbl_pedido (id,fecha_creacion,fecha_modificacion,estado,detalle,nombre_cliente,documento_cliente,tipo_documento_cliente,"
 			+ " telefono_cliente,correo_cliente,direccion_cliente,fk_usuario_comercial)"
-			+ " values (nextval('tbl_pedido_id_seq'),:#{#order.getCreateDate()},:#{#order.getUpdateDate()},:#{#order.getState()},:#{#order.getDetail()},:#{#order.getCustomerName()},:#{#order.getCustomerDocument()},:#{#order.getCustomerDocumentType()},"
+			+ " values (nextval('tbl_pedido_id_seq'),:#{#order.getCreateDate()},:#{#order.getUpdateDate()},:#{#order.getStatus()},:#{#order.getDetail()},:#{#order.getCustomerName()},:#{#order.getCustomerDocument()},:#{#order.getCustomerDocumentType()},"
 			+ " :#{#order.getCustomerPhone()},:#{#order.getCustomerMail()},:#{#order.getCustomerAddress()},:#{#order.getUserId()}) RETURNING id,fecha_creacion,fecha_modificacion,estado,detalle,nombre_cliente,documento_cliente,tipo_documento_cliente,telefono_cliente,correo_cliente,direccion_cliente,fk_usuario_comercial")
 	Mono<OrdersEntity> saveOrder(@Param("order") Orders order);
 	

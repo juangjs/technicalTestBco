@@ -8,5 +8,5 @@ import lombok.Data;
 @Builder(toBuilder = true)
 public class OrderUpdateApi {
 	private String orderId;
-	private String state;
+	private String status;
 }

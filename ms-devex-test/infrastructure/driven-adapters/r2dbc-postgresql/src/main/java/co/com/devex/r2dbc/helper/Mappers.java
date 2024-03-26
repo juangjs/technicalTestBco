@@ -17,9 +17,7 @@ import co.com.devex.r2dbc.entities.ProductsEntity;
 import co.com.devex.r2dbc.entities.ResumeOrderEntity;
 import co.com.devex.r2dbc.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import reactor.core.publisher.Flux;
-@Log4j2
+
 @Component
 @RequiredArgsConstructor
 public class Mappers {
@@ -29,7 +27,7 @@ public class Mappers {
 				.id(ordersEntity.getId())
 				.createDate(ordersEntity.getCreateDate())
 				.updateDate(ordersEntity.getUpdateDate())
-				.state(ordersEntity.getState())
+				.status(ordersEntity.getState())
 				.detail(ordersEntity.getDetail())
 				.customerName(ordersEntity.getCustomerName())
 				.customerDocument(ordersEntity.getCustomerDocument())
@@ -46,7 +44,7 @@ public class Mappers {
 				.id(orders.getId())
 				.createDate(orders.getCreateDate())
 				.updateDate(orders.getUpdateDate())
-				.state(orders.getState())
+				.state(orders.getStatus())
 				.detail(orders.getDetail())
 				.customerName(orders.getCustomerName())
 				.customerDocument(orders.getCustomerDocument())

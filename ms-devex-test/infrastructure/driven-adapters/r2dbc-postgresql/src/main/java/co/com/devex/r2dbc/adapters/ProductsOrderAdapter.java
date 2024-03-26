@@ -41,4 +41,10 @@ public class ProductsOrderAdapter implements IProductsOrderRepository {
 				.saveAll(Flux.fromIterable(mappers.toProductOrdersListEntity(productOrders)))
 				.map(mappers::toProductOrdersModel);
 	}
+
+	@Override
+	public Flux<ProductOrders> findProductsByOrderId(Long orderId) {
+		return iProductOrdersEntityRepository.findByOrderId(orderId)
+				.map(mappers::toProductOrdersModel);
+	}
 }

@@ -10,9 +10,8 @@ import co.com.devex.model.orders.api.createorders.OrderUpdateApi;
 import co.com.devex.model.orders.api.createorders.OrdersApi;
 import co.com.devex.model.orders.api.createorders.ProductOrderApi;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
-@Log4j2
+
 @Component
 @RequiredArgsConstructor
 public class OrderMapper {
@@ -42,7 +41,7 @@ public class OrderMapper {
 	public Mono<OrderUpdateApi> toOrderUpdateApiModel(OrderUpdateReq orderUpdateReq){
 		return Mono.just(OrderUpdateApi.builder()
 				.orderId(orderUpdateReq.getOrderId())
-				.state(orderUpdateReq.getState())
+				.status(orderUpdateReq.getState())
 				.build());
 	}
 }
