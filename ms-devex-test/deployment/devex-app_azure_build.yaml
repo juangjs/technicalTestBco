@@ -1,4 +1,4 @@
-name: $(Build.SourceBranchName).$(date:yyyyMMdd)$(rev:.r)
+name: $(Azure Pipelines.SourceBranchName).$(date:yyyyMMdd)$(rev:.r)
 
 variables:
   - name: 'Artifactory.Repository'
@@ -24,7 +24,7 @@ stages:
   - job: build
     displayName: 'Build'
     pool:
-      name: Build
+      name: Azure Pipelines
       demands:
         - java
         - JAVA_HOME_17_X64
@@ -95,7 +95,7 @@ stages:
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact'
-      condition: in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/trunk', 'refs/heads/master')
+      condition: in(variables['Azure Pipelines.SourceBranch'], 'refs/heads/main', 'refs/heads/trunk', 'refs/heads/master')
       inputs:
         PathtoPublish: '$(System.DefaultWorkingDirectory)/applications/app-service/build/libs/'
         ArtifactName: '$(Artifact.Name)'
