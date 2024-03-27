@@ -3,7 +3,6 @@ package co.com.devex.usecase.orders;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import co.com.devex.model.orders.Orders;
 import co.com.devex.model.orders.ProductOrders;
@@ -22,7 +21,6 @@ import co.com.devex.model.orders.response.updateorder.UpdateOrderData;
 import co.com.devex.model.products.Products;
 import co.com.devex.usecase.orders.products.ProductsUseCase;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
