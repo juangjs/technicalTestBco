@@ -1,4 +1,4 @@
-name: $(Azure Pipelines.SourceBranchName).$(date:yyyyMMdd)$(rev:.r)
+name: $(Build.SourceBranchName).$(date:yyyyMMdd)$(rev:.r)
 
 variables:
   - name: 'Artifactory.Repository'
@@ -24,10 +24,10 @@ stages:
   - job: build
     displayName: 'Build'
     pool:
-      name: Azure Pipelines
+      name: Build
       demands:
         - java
-        - JAVA_HOME_17_X64
+
     steps:
 #    - task: SonarQubePrepare@5
 #      displayName: 'Prepare analysis on SonarQube'
@@ -43,21 +43,19 @@ stages:
     - task: Gradle@3
       displayName: 'Build and Test'
       inputs:
-        workingDirectory: .
-        gradleWrapperFile: gradlew
+        workingDirectory: ms-devex-test/.
+        gradleWrapperFile: ms-devex-test/gradlew
         tasks: 'clean build jacocoMergedReport'
-        publishJUnitResults: true
-        testResultsFiles: '**/TEST-*.xml'
-        sonarQubeRunAnalysis: true
-        sqGradlePluginVersionChoice: 'build'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.17'
+#        publishJUnitResults: true
+        testResultsFiles: '**/ms-devex-test/TEST-*.xml'
+#        sonarQubeRunAnalysis: true
+#        sqGradlePluginVersionChoice: 'build'
 
     - task: PublishCodeCoverageResults@1
       displayName: 'Publish code coverage'
       inputs:
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/build/reports/jacocoMergedReport/jacocoMergedReport.xml'
-        reportDirectory: '$(System.DefaultWorkingDirectory)/build/reports/jacocoMergedReport/html'
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/ms-devex-test/build/reports/jacocoMergedReport/jacocoMergedReport.xml'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/ms-devex-test/build/reports/jacocoMergedReport/html'
 
  #   - task: Sonar-buildbreaker@8
  #     displayName: 'Quality Gate'
@@ -67,35 +65,24 @@ stages:
     - task: Docker@2
       displayName: 'Build Docker image'
       inputs:
-        command: 'build'
-        Dockerfile: '$(System.DefaultWorkingDirectory)/Dockerfile'
-        tags: 'devex_app:$(Build.BuildId)'
-    - script: |
-        docker save -o dockerimage/image.tar devex_app:$(Build.BuildId)
-      displayName: 'Save Docker image'
+        containerRegistry: 'docker'
+        repository: 'juangjllo/devexp-repository'
+        command: 'buildAndPush'
+        Dockerfile: '$(System.DefaultWorkingDirectory)/ms-devex-test/Dockerfile'
+        tags: 'devex_app_$(Build.BuildId)'
       
+    - script: |
+        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+        trivy --version
+      displayName: 'Install Trivy Scan'
 
     - script: |
-        wget https://github.com/aquasecurity/trivy/releases/download/v0.20.0/trivy_0.20.0_Linux-64bit.tar.gz
-        tar zxvf trivy_0.20.0_Linux-64bit.tar.gz
-        sudo mv trivy /usr/local/bin/trivy
-      displayName: 'Install Trivy'
-      
-    - script: |
-        trivy image --severity HIGH,CRITICAL dockerimage/image.tar
-      displayName: 'Run Trivy Vulnerability Scan'
-      
-    - script: |
-        trivy image --severity HIGH,CRITICAL your-image:tag | tee vulnerabilities.txt
-      displayName: 'Run Trivy Vulnerability Scan'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathtoPublish: 'vulnerabilities.txt'
-        artifactName: 'VulnerabilityReport'
+        trivy image juangjllo/devexp-repository:devex_app_$(Build.BuildId)
+      displayName: 'Trivy Scan Docker Image'
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact'
-      condition: in(variables['Azure Pipelines.SourceBranch'], 'refs/heads/main', 'refs/heads/trunk', 'refs/heads/master')
+      condition: in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/trunk', 'refs/heads/master')
       inputs:
         PathtoPublish: '$(System.DefaultWorkingDirectory)/applications/app-service/build/libs/'
         ArtifactName: '$(Artifact.Name)'
